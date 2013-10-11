@@ -1,0 +1,51 @@
+.component.scroll {
+  position: relative;
+  padding-right: 10px;
+  overflow: hidden;
+}
+.component.scroll >.content {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.component.scroll >.scrollbar {
+  top: 0;
+  right: 0;
+  position: absolute;
+  z-index: 999;
+}
+.component.scroll >.scrollbar.vertical {
+  width: 10px;
+  height: 100%;
+}
+.component.scroll >.scrollbar.horizontal {
+  width: 100%;
+  height: 10px;
+}
+.component.scroll >.scrollbar >.track {
+  width: 100%;
+  height: 100%;
+  background-color: #ddd;
+}
+.component.scroll >.scrollbar >.track >.thumb {
+  z-index: 9999;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #808080;
+  width: 100%;
+  height: 100%;
+  cursor: move;
+}
+.component.scroll >.scrollbar >.track >.button.top {
+  place: holder;
+}
+.component.scroll >.scrollbar >.track >.button.left {
+  place: holder;
+}
+.component.scroll >.scrollbar >.track >.button.right {
+  place: holder;
+}
+.component.scroll >.scrollbar >.track >.button.bottom {
+  place: holder;
+}

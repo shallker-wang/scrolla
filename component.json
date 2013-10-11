@@ -1,0 +1,25 @@
+{
+  "name": "scroll",
+  "repo": "shallker-wang/scroll",
+  "description": "Custom scrollbar component",
+  "version": "0.0.1",
+  "keywords": [],
+  "dependencies": {
+    "component/jquery": "1.8.2",
+    "shallker-wang/eventy": "*"
+  },
+  "development": {},
+  "license": "MIT",
+  "main": "component.js",
+  "scripts": [
+    "component.js",
+    "lib/content.js",
+    "lib/scrollbar.js",
+    "lib/scroll.js",
+    "lib/track.js",
+    "lib/thumb.js"
+  ],
+  "styles": [
+    "css/scroll.css"
+  ]
+}
