@@ -23,55 +23,33 @@ $(function () {
 ## Structure
 ```jade
 .component.scroll
-  p Lorem Ipsum
+  .content
+    p Lorem Ipsum
 
-.scrollbar.horizontal.bottom.inside
-  .track
-    .button.left
-    .thumb
-    .button.right
+  .scrollbar.horizontal
+    .track
+      .button.left
+      .thumb
+      .button.right
 
-.scrollbar.vertical.right.outside
-  .track
-    .button.top
-    .thumb
-    .button.bottom
+  .scrollbar.vertical
+    .track
+      .button.top
+      .thumb
+      .button.bottom
 ```
 
 
 ## API
 
-### scroll
+#### scroll.top()
 
-#### .top()
+#### scroll.bottom()
 
-#### .bottom()
+#### scroll.left()
 
-#### .left()
+#### scroll.right()
 
-#### .right()
-
-### scroll.content
-
-### scroll.verticalScrollbar
-
-#### .width
-#### .height
-#### .direction
-#### .position
-#### .place
-#### .top
-#### .left
-
-### scroll.horizontalScrollbar
-
-#### .width
-#### .height
-#### .direction
-#### .position
-#### .place
-#### .top
-#### .left
 
 ## Compatibility
 - IE 9+
@@ -81,13 +59,12 @@ $(function () {
 
 
 ## Test
-http://shallker-wang.github.io/scroll/test/horizontal.html   
-http://shallker-wang.github.io/scroll/test/vertical.html   
-http://shallker-wang.github.io/scroll/test/both.html   
+http://shallker-wang.github.io/scroll/test/index.html   
 
 
 ## Todo
 - ~~horizontal support~~
+- horizontal mouse scroll
 - smooth scrolling
 - four corner buttons
 
