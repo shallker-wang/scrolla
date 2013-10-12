@@ -43,19 +43,24 @@ $(function () {
 ## API
 
 ### scrolla
-
+#### .percentX
+#### .percentY
 #### .top()
-
 #### .bottom()
-
 #### .left()
-
 #### .right()
 
-### scrolla.content
+### scrolla.scroll
+#### .percentX
+#### .percentY
+#### .scrollTop
+#### .scrollLeft
+#### .top
+#### .bottom
+#### .left
+#### .right
 
 ### scrolla.verticalScrollbar
-
 #### .width
 #### .height
 #### .direction
@@ -63,9 +68,10 @@ $(function () {
 #### .place
 #### .top
 #### .left
+#### .shiftLeft(Number pixels)
+#### .shiftRight(Number pixels)
 
 ### scrolla.horizontalScrollbar
-
 #### .width
 #### .height
 #### .direction
@@ -73,6 +79,8 @@ $(function () {
 #### .place
 #### .top
 #### .left
+#### .shiftUp(Number pixels)
+#### .shiftDown(Number pixels)
 
 
 ## Compatibility
