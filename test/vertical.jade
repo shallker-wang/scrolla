@@ -5,11 +5,11 @@ html(lang="en")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     link(rel="stylesheet", href="../build/build.css")
     :stylus
-      .component.scroll
+      .component.scrolla
         place holder
 
   body
-    .component.scroll#component(style="width: 400px; height: 400px; overflow: hidden;")
+    .component.scrolla#component(style="width: 400px; height: 400px; overflow: hidden;")
       .content#content
         div head
         p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis facilisis adipiscing enim. Vestibulum et nunc sed nulla sodales tincidunt. Sed posuere nisl eu mi viverra porttitor. Etiam id ante a dolor vehicula adipiscing. Nam elementum congue erat vel vehicula. Suspendisse enim justo, ornare non arcu in, sollicitudin mattis urna. Duis vitae suscipit nunc. Nam a lacinia elit.
@@ -36,10 +36,10 @@ html(lang="en")
     script(src="../build/build.js")
     script
       var $ = require('jquery');
-      var Scroll = require('scroll');
+      var Scrolla = require('scrolla');
 
       $(function () {
-        $('.scroll').each(function (index, el) {
-          window.scroll = new Scroll(el);
+        $('.scrolla').each(function (index, el) {
+          window.scrolla = new Scrolla(el);
         });
       })

@@ -1,29 +1,30 @@
-scroll
+scrolla
 ==========
 
 Custom scrollbar component.
 
 ## Installation
 ```
-$ component install shallker-wang/scroll
+$ component install shallker-wang/scrolla
 ```
 
 ## Quick Start
 ```javascript
-var Scroll = require('scroll'),
+var Scrolla = require('scrolla'),
     $ = require('jquery');
 
 $(function () {
-  $('.component.scroll').each(function (i, el) {
-    var scroll = new Scroll(el);
+  $('.component.scrolla').each(function (i, el) {
+    var scrolla = new Scrolla(el);
   });
 });
 ```
 
 ## Structure
 ```jade
-.component.scroll
-  p Content Lorem Ipsum
+.component.scrolla
+  .content
+    p Content Lorem Ipsum
 
   .scrollbar.horizontal.bottom.inside
     .track
@@ -41,7 +42,7 @@ $(function () {
 
 ## API
 
-### scroll
+### scrolla
 
 #### .top()
 
@@ -51,9 +52,9 @@ $(function () {
 
 #### .right()
 
-### scroll.content
+### scrolla.content
 
-### scroll.verticalScrollbar
+### scrolla.verticalScrollbar
 
 #### .width
 #### .height
@@ -63,7 +64,7 @@ $(function () {
 #### .top
 #### .left
 
-### scroll.horizontalScrollbar
+### scrolla.horizontalScrollbar
 
 #### .width
 #### .height
@@ -82,9 +83,9 @@ $(function () {
 
 
 ## Test
-http://shallker-wang.github.io/scroll/test/horizontal.html   
-http://shallker-wang.github.io/scroll/test/vertical.html   
-http://shallker-wang.github.io/scroll/test/both.html   
+http://shallker-wang.github.io/scrolla/test/horizontal.html   
+http://shallker-wang.github.io/scrolla/test/vertical.html   
+http://shallker-wang.github.io/scrolla/test/both.html   
 
 
 ## Todo
