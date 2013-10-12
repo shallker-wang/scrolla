@@ -23,20 +23,19 @@ $(function () {
 ## Structure
 ```jade
 .component.scroll
-  .content
-    p Lorem Ipsum
+  p Content Lorem Ipsum
 
-  .scrollbar.horizontal
-    .track
-      .button.left
-      .thumb
-      .button.right
+.scrollbar.horizontal
+  .track
+    .button.left
+    .thumb
+    .button.right
 
-  .scrollbar.vertical
-    .track
-      .button.top
-      .thumb
-      .button.bottom
+.scrollbar.vertical
+  .track
+    .button.top
+    .thumb
+    .button.bottom
 ```
 
 
@@ -83,12 +82,14 @@ $(function () {
 
 
 ## Test
-http://shallker-wang.github.io/scroll/test/index.html   
+http://shallker-wang.github.io/scroll/test/horizontal.html   
+http://shallker-wang.github.io/scroll/test/vertical.html   
+http://shallker-wang.github.io/scroll/test/both.html   
 
 
 ## Todo
 - ~~horizontal support~~
-- horizontal mouse scroll
+- ~~horizontal mouse scroll~~
 - smooth scrolling
 - unify scrolling speed on browsers
 - four corner buttons
