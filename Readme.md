@@ -25,13 +25,13 @@ $(function () {
 .component.scroll
   p Content Lorem Ipsum
 
-.scrollbar.horizontal
+.scrollbar.horizontal.bottom.inside
   .track
     .button.left
     .thumb
     .button.right
 
-.scrollbar.vertical
+.scrollbar.vertical.right.outside
   .track
     .button.top
     .thumb
