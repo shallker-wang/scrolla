@@ -1,0 +1,71 @@
+.component.scrolla {
+  position: relative;
+}
+.component.scrolla >.scroll {
+  overflow: hidden;
+}
+.component.scrolla >.scrollbar {
+  position: absolute;
+  z-index: 999;
+}
+.component.scrolla >.scrollbar.vertical {
+  width: 10px;
+  height: 100%;
+  top: 0;
+}
+.component.scrolla >.scrollbar.vertical.left.inside {
+  left: 0;
+}
+.component.scrolla >.scrollbar.vertical.left.outside {
+  right: 100%;
+}
+.component.scrolla >.scrollbar.vertical.right.inside {
+  right: 0;
+}
+.component.scrolla >.scrollbar.vertical.right.outside {
+  left: 100%;
+}
+.component.scrolla >.scrollbar.horizontal {
+  height: 10px;
+  width: 100%;
+  left: 0;
+}
+.component.scrolla >.scrollbar.horizontal.top.inside {
+  top: 0;
+}
+.component.scrolla >.scrollbar.horizontal.top.outside {
+  bottom: 100%;
+}
+.component.scrolla >.scrollbar.horizontal.bottom.inside {
+  bottom: 0;
+}
+.component.scrolla >.scrollbar.horizontal.bottom.outside {
+  top: 100%;
+}
+.component.scrolla >.scrollbar >.track {
+  width: 100%;
+  height: 100%;
+  background-color: #ddd;
+}
+.component.scrolla >.scrollbar >.track >.thumb {
+  z-index: 9999;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #808080;
+  width: 100%;
+  height: 100%;
+  cursor: move;
+}
+.component.scrolla >.scrollbar >.track >.button.top {
+  place: holder;
+}
+.component.scrolla >.scrollbar >.track >.button.left {
+  place: holder;
+}
+.component.scrolla >.scrollbar >.track >.button.right {
+  place: holder;
+}
+.component.scrolla >.scrollbar >.track >.button.bottom {
+  place: holder;
+}

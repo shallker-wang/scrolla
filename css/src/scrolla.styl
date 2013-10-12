@@ -1,29 +1,50 @@
-.component.scroll
-  overflow hidden
+.component.scrolla
+  position relative
 
-  +.scrollbar, +.scrollbar+.scrollbar
+  >.scroll
+    overflow hidden
+
+  >.scrollbar
     position absolute
     z-index 999
 
     &.vertical
       width 10px
+      height 100%
+      top 0
 
-      // &.left
-      //   &.inside
-      //     left 0
+      &.left
+        &.inside
+          left 0
 
-      //   &.outside
-      //     right 100%
+        &.outside
+          right 100%
 
-      // &.right
-      //   &.inside
-      //     right 0
+      &.right
+        &.inside
+          right 0
 
-      //   &.outside
-      //     left 100%
+        &.outside
+          left 100%
 
     &.horizontal
       height 10px
+      width 100%
+      left 0
+
+      &.top
+        &.inside
+          top 0
+
+        &.outside
+          bottom 100%
+
+      &.bottom
+        &.inside
+          bottom 0
+
+        &.outside
+          top 100%
 
     >.track
       width 100%

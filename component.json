@@ -1,8 +1,8 @@
 {
-  "name": "scroll",
-  "repo": "shallker-wang/scroll",
+  "name": "scrolla",
+  "repo": "shallker-wang/scrolla",
   "description": "Custom scrollbar component",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "keywords": [],
   "dependencies": {
     "component/jquery": "1.8.2",
@@ -13,15 +13,15 @@
   "main": "component.js",
   "scripts": [
     "component.js",
-    "lib/content.js",
-    "lib/scrollbar.js",
+    "lib/scrolla.js",
     "lib/scroll.js",
+    "lib/scrollbar.js",
     "lib/track.js",
     "lib/thumb.js",
     "tpl/horizontal-scrollbar.js",
     "tpl/vertical-scrollbar.js"
   ],
   "styles": [
-    "css/scroll.css"
+    "css/scrolla.css"
   ]
 }

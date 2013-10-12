@@ -1,38 +1,38 @@
-scroll
+scrolla
 ==========
 
 Custom scrollbar component.
 
 ## Installation
 ```
-$ component install shallker-wang/scroll
+$ component install shallker-wang/scrolla
 ```
 
 ## Quick Start
 ```javascript
-var Scroll = require('scroll'),
+var Scrolla = require('scrolla'),
     $ = require('jquery');
 
 $(function () {
-  $('.component.scroll').each(function (i, el) {
-    var scroll = new Scroll(el);
+  $('.component.scrolla').each(function (i, el) {
+    var scrolla = new Scrolla(el);
   });
 });
 ```
 
 ## Structure
 ```jade
-.component.scroll
-  .content
-    p Lorem Ipsum
+.component.scrolla
+  .scroll
+    p Content Lorem Ipsum
 
-  .scrollbar.horizontal
+  .scrollbar.horizontal.bottom.inside
     .track
       .button.left
       .thumb
       .button.right
 
-  .scrollbar.vertical
+  .scrollbar.vertical.right.outside
     .track
       .button.top
       .thumb
@@ -42,20 +42,25 @@ $(function () {
 
 ## API
 
-### scroll
-
+### scrolla
+#### .percentX
+#### .percentY
 #### .top()
-
 #### .bottom()
-
 #### .left()
-
 #### .right()
 
-### scroll.content
+### scrolla.scroll
+#### .percentX
+#### .percentY
+#### .scrollTop
+#### .scrollLeft
+#### .top
+#### .bottom
+#### .left
+#### .right
 
-### scroll.verticalScrollbar
-
+### scrolla.verticalScrollbar
 #### .width
 #### .height
 #### .direction
@@ -63,9 +68,10 @@ $(function () {
 #### .place
 #### .top
 #### .left
+#### .shiftLeft(Number pixels)
+#### .shiftRight(Number pixels)
 
-### scroll.horizontalScrollbar
-
+### scrolla.horizontalScrollbar
 #### .width
 #### .height
 #### .direction
@@ -73,6 +79,8 @@ $(function () {
 #### .place
 #### .top
 #### .left
+#### .shiftUp(Number pixels)
+#### .shiftDown(Number pixels)
 
 
 ## Compatibility
@@ -83,12 +91,14 @@ $(function () {
 
 
 ## Test
-http://shallker-wang.github.io/scroll/test/index.html   
+http://shallker-wang.github.io/scrolla/test/horizontal.html   
+http://shallker-wang.github.io/scrolla/test/vertical.html   
+http://shallker-wang.github.io/scrolla/test/both.html   
 
 
 ## Todo
 - ~~horizontal support~~
-- horizontal mouse scroll
+- ~~horizontal mouse scroll~~
 - smooth scrolling
 - unify scrolling speed on browsers
 - four corner buttons
