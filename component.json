@@ -18,6 +18,8 @@
     "lib/scrollbar.js",
     "lib/track.js",
     "lib/thumb.js",
+    "lib/horizontal-scrollbar.js",
+    "lib/vertical-scrollbar.js",
     "tpl/horizontal-scrollbar.js",
     "tpl/vertical-scrollbar.js"
   ],
