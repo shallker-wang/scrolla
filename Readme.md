@@ -90,6 +90,7 @@ http://shallker-wang.github.io/scroll/test/index.html
 - ~~horizontal support~~
 - horizontal mouse scroll
 - smooth scrolling
+- unify scrolling speed on browsers
 - four corner buttons
 
 
