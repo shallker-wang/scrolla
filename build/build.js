@@ -10100,7 +10100,8 @@ module.exports = require('./lib/scrolla');
 require.register("scrolla/lib/scrolla.js", function(exports, require, module){
 var $ = require('jquery'),
     Scroll = require('./scroll'),
-    Scrollbar = require('./scrollbar'),
+    VerticalScrollbar = require('./vertical-scrollbar'),
+    HorizontalScrollbar = require('./horizontal-scrollbar'),
     eventy = require('eventy');
 
 module.exports = function Scrolla(el) {
@@ -10159,7 +10160,10 @@ module.exports = function Scrolla(el) {
   })()
 
   function createScrollbar(direction) {
-    var scrollbar = new Scrollbar(direction);
+    var scrollbar;
+
+    if (direction === 'vertical') scrollbar = new VerticalScrollbar();
+    if (direction === 'horizontal') scrollbar = new HorizontalScrollbar();
 
     /*
       Append element to the DOM first, so you can get offsetWidth, clientWidth
@@ -10637,17 +10641,10 @@ module.exports = function Scroll(el) {
 require.register("scrolla/lib/scrollbar.js", function(exports, require, module){
 var $ = require('jquery');
 var eventy = require('eventy');
-var Track = require('./track');
-var verticalScrollbar = require('../tpl/vertical-scrollbar');
-var horizontalScrollbar = require('../tpl/horizontal-scrollbar');
 
-module.exports = function (direction) {
-  var track, thumb, button, corner;
-  var el;
-
+module.exports = function (el, direction) {
   var scrollbar = function () {
-    var scrollbar = this;
-    el = $(direction === 'horizontal' ? horizontalScrollbar : verticalScrollbar)[0];
+    this.el = el;
 
     this.property = function (name, defines) {
       Object.defineProperty(this, name, defines);
@@ -10658,11 +10655,11 @@ module.exports = function (direction) {
     */
     this.property('width', {
       get: function () {
-        return el.offsetWidth;
+        return this.el.offsetWidth;
       },
 
       set: function (value) {
-        return $(el).width(value);
+        return $(this.el).width(value);
       }
     });
 
@@ -10671,23 +10668,11 @@ module.exports = function (direction) {
     */
     this.property('height', {
       get: function () {
-        return el.offsetHeight;
+        return this.el.offsetHeight;
       },
 
       set: function (value) {
-        return $(el).height(value);
-      }
-    });
-
-    this.property('direction', {
-      get: function () {
-        return direction;
-      },
-
-      set: function (value) {
-        if (direction === value) return;
-        direction = value;
-        scrollbar.trigger('direction', scrollbar.direction);
+        return $(this.el).height(value);
       }
     });
 
@@ -10696,157 +10681,84 @@ module.exports = function (direction) {
     */
     this.property('place', {
       get: function () {
-        return $(el).hasClass('outside') ? 'outside' : 'inside';
+        return $(this.el).hasClass('outside') ? 'outside' : 'inside';
       },
 
-      set: function (value) {
-        if (scrollbar.place === value) return;
-        $(el).removeClass(scrollbar.place);
-        $(el).addClass(value);
-        scrollbar.trigger('place', scrollbar.place);
-      }
-    });
-
-    /*
-      Get or set the scrollbar's position
-      for vertical scrollbar, 'left' or 'outside'
-      for horizontal scrollbar, 'top' or 'bottom'
-    */
-    this.property('position', {
-      get: function () {
-        if (scrollbar.direction === 'vertical') {
-          return $(el).hasClass('left') ? 'left' : 'right';
-        }
-
-        if (scrollbar.direction === 'horizontal') {
-          return $(el).hasClass('top') ? 'top' : 'bottom';
-        }
-      },
-
-      set: function (value) {
-        if (scrollbar.position === value) return;
-        $(el).removeClass(scrollbar.position);
-        $(el).addClass(value);
-        scrollbar.trigger('position', scrollbar.position);
+      set: function (place) {
+        if (this.place === place) return;
+        $(this.el).removeClass(this.place);
+        $(this.el).addClass(place);
+        this.trigger('place', this.place);
       }
     });
 
     this.property('top', {
       get: function () {
-        return parseInt($(el).css('top').replace(/[^-\d\.]/g, ''));
+        return parseInt($(this.el).css('top').replace(/[^-\d\.]/g, ''));
       },
 
       set: function (top) {
-        $(el).css('top', top);
-        scrollbar.trigger('top', scrollbar.top);
+        $(this.el).css('top', top);
+        this.trigger('top', this.top);
       }
     });
 
     this.property('left', {
       get: function () {
-        return parseInt($(el).css('left').replace(/[^-\d\.]/g, ''));
+        return parseInt($(this.el).css('left').replace(/[^-\d\.]/g, ''));
       },
 
       set: function (left) {
-        $(el).css('left', left);
-        scrollbar.trigger('left', scrollbar.left);
+        $(this.el).css('left', left);
+        this.trigger('left', this.left);
       }
     });
 
     this.property('marginRight', {
       get: function () {
-        return parseInt($(el).css('marginRight').replace(/[^-\d\.]/g, ''));
+        return parseInt($(this.el).css('marginRight').replace(/[^-\d\.]/g, ''));
       },
 
       set: function (marginRight) {
-        $(el).css('marginRight', marginRight);
+        $(this.el).css('marginRight', marginRight);
       }
     });
 
     this.property('marginLeft', {
       get: function () {
-        return parseInt($(el).css('marginLeft').replace(/[^-\d\.]/g, ''));
+        return parseInt($(this.el).css('marginLeft').replace(/[^-\d\.]/g, ''));
       },
 
       set: function (marginLeft) {
-        $(el).css('marginLeft', marginLeft);
+        $(this.el).css('marginLeft', marginLeft);
       }
     });
 
     this.property('marginTop', {
       get: function () {
-        return parseInt($(el).css('marginTop').replace(/[^-\d\.]/g, ''));
+        return parseInt($(this.el).css('marginTop').replace(/[^-\d\.]/g, ''));
       },
 
       set: function (marginTop) {
-        $(el).css('marginTop', marginTop);
+        $(this.el).css('marginTop', marginTop);
       }
     });
 
     this.property('marginBottom', {
       get: function () {
-        return parseInt($(el).css('marginBottom').replace(/[^-\d\.]/g, ''));
+        return parseInt($(this.el).css('marginBottom').replace(/[^-\d\.]/g, ''));
       },
 
       set: function (marginBottom) {
-        $(el).css('marginBottom', marginBottom);
+        $(this.el).css('marginBottom', marginBottom);
       }
     });
 
-    track = Track.call(this, $(el).find('>.track').get(0));
     return this;
   }.call(eventy({}));
 
-  scrollbar.el = el;
-  scrollbar.track = track;
-
   scrollbar.destroy = function () {
-    el.parentNode.removeChild(el);
-  }
-
-  /*
-    Shift left by pixels
-    @arguments Number distance
-    @distance, greater than zero
-  */
-  scrollbar.shiftLeft = function (distance) {
-    if (this.position === 'right' && this.place === 'inside') {
-      this.marginRight = this.marginRight + distance;
-    }
-
-    if (this.position === 'right' && this.place === 'outside') {
-      this.marginLeft = this.marginLeft - distance;
-    }
-  }
-
-  scrollbar.shiftRight = function (distance) {
-    if (this.position === 'right' && this.place === 'inside') {
-      this.marginRight = this.marginRight - distance;
-    }
-
-    if (this.position === 'right' && this.place === 'outside') {
-      this.marginLeft = this.marginLeft + distance;
-    }
-  }
-
-  scrollbar.shiftUp = function (distance) {
-    if (this.position === 'bottom' && this.place === 'inside') {
-      this.marginBottom = this.marginBottom + distance;
-    }
-
-    if (this.position === 'bottom' && this.place === 'outside') {
-      this.marginTop = this.marginTop - distance;
-    }
-  }
-
-  scrollbar.shiftDown = function (distance) {
-    if (this.position === 'bottom' && this.place === 'inside') {
-      this.marginBottom = this.marginBottom - distance;
-    }
-
-    if (this.position === 'bottom' && this.place === 'outside') {
-      this.marginTop = this.marginTop + distance;
-    }
+    this.el.parentNode.removeChild(this.el);
   }
 
   return scrollbar;
@@ -10953,7 +10865,109 @@ module.exports = function Thumb(el) {
   var scrolling;
 
   var thumb = function() {
+    var thumb = this;
     this.el = el;
+
+    this.property = function(name, defines) {
+      Object.defineProperty(this, name, defines);
+    }
+
+    this.property('width', {
+      get: function () {
+        return el.offsetWidth;
+      },
+
+      set: function (value) {
+        return $(el).width(value);
+      }
+    });
+
+    this.property('height', {
+      get: function () {
+        return el.offsetHeight;
+      },
+
+      set: function (value) {
+        return $(el).height(value);
+      }
+    });
+
+    this.property('top', {
+      get: function () {
+        return parseInt($(el).css('top').replace(/[^-\d\.]/g, ''));
+      },
+
+      set: function (top) {
+        $(el).css('top', top);
+        thumb.trigger('top', thumb.top);
+      }
+    });
+
+    this.property('left', {
+      get: function () {
+        return parseInt($(el).css('left').replace(/[^-\d\.]/g, ''));
+      },
+
+      set: function (left) {
+        $(el).css('left', left);
+        thumb.trigger('left', thumb.left);
+      }
+    });
+
+    this.property('availableMovingWidth', {
+      get: function () {
+        return track.width - thumb.width;
+      }
+    });
+
+    this.property('availableMovingHeight', {
+      get: function () {
+        return track.height - thumb.height;
+      }
+    });
+
+    this.property('percentX', {
+      get: function () {
+        return thumb.left / thumb.availableMovingWidth * 100;
+      },
+
+      set: function (percentage) {
+        $(el).css('left', percentage / 100 * thumb.availableMovingWidth + 'px');
+        thumb.trigger('percent-x', thumb.percentage);
+      }
+    });
+
+    this.property('percentY', {
+      get: function () {
+        return thumb.top / thumb.availableMovingHeight * 100;
+      },
+
+      set: function (percentage) {
+        $(el).css('top', percentage / 100 * thumb.availableMovingHeight + 'px');
+        thumb.trigger('percent-y', thumb.percentage);
+      }
+    });
+
+    this.property('percentWidth', {
+      get: function () {
+        return thumb.width / track.width;
+      },
+
+      set: function (percentage) {
+        return thumb.width = percentage / 100 * track.width;
+      }
+    });
+
+    this.property('percentHeight', {
+      get: function () {
+        return thumb.height / track.height;
+      },
+
+      set: function (percentage) {
+        return thumb.height = percentage / 100 * track.height;
+      }
+    });
+
     $(this.el).on('mousedown', onMouseDown);
     $(document).on('mouseup', onDocumentMouseUp);
     $(document).on('mousemove', onDocumentMouseMove);
@@ -10997,107 +11011,150 @@ module.exports = function Thumb(el) {
     track.trigger('scrolling');
   }
 
-  thumb.property = function(name, defines) {
-    Object.defineProperty(thumb, name, defines);
+  return thumb;
+}
+
+});
+require.register("scrolla/lib/horizontal-scrollbar.js", function(exports, require, module){
+var $ = require('jquery');
+var tpl = require('../tpl/horizontal-scrollbar');
+var Scrollbar = require('./scrollbar');
+var Track = require('./track');
+
+module.exports = function HorizontalScrollbar() {
+  var el = $(tpl);
+  var direction = 'horizontal';
+  var track, thumb, button, corner;
+
+  var hscrollbar = function () {
+    this.property('direction', {
+      get: function () {
+        return direction;
+      },
+
+      set: function (value) {
+        if (direction === value) return;
+        direction = value;
+        this.trigger('direction', this.direction);
+      }
+    });
+
+    /*
+      Get or set the scrollbar's position, 'top' or 'bottom'
+    */
+    this.property('position', {
+      get: function () {
+        return $(this.el).hasClass('top') ? 'top' : 'bottom';
+      },
+
+      set: function (position) {
+        if (['top', 'bottom'].indexOf(position) === -1) return;
+        if (this.position === position) return;
+        $(this.el).removeClass(this.position);
+        $(this.el).addClass(position);
+        this.trigger('position', this.position);
+      }
+    });
+
+    this.track = Track.call(this, $(this.el).find('>.track').get(0));
+    return this;
+  }.call(Object.create(new Scrollbar(el)));
+
+  hscrollbar.shiftUp = function (distance) {
+    if (this.position === 'bottom' && this.place === 'inside') {
+      this.marginBottom = this.marginBottom + distance;
+    }
+
+    if (this.position === 'bottom' && this.place === 'outside') {
+      this.marginTop = this.marginTop - distance;
+    }
   }
 
-  thumb.property('width', {
-    get: function () {
-      return el.offsetWidth;
-    },
-
-    set: function (value) {
-      return $(el).width(value);
+  hscrollbar.shiftDown = function (distance) {
+    if (this.position === 'bottom' && this.place === 'inside') {
+      this.marginBottom = this.marginBottom - distance;
     }
-  });
 
-  thumb.property('height', {
-    get: function () {
-      return el.offsetHeight;
-    },
-
-    set: function (value) {
-      return $(el).height(value);
+    if (this.position === 'bottom' && this.place === 'outside') {
+      this.marginTop = this.marginTop + distance;
     }
-  });
+  }
 
-  thumb.property('top', {
-    get: function () {
-      return parseInt($(el).css('top').replace(/[^-\d\.]/g, ''));
-    },
+  return hscrollbar;
+}
 
-    set: function (top) {
-      $(el).css('top', top);
-      thumb.trigger('top', thumb.top);
+});
+require.register("scrolla/lib/vertical-scrollbar.js", function(exports, require, module){
+var $ = require('jquery');
+var tpl = require('../tpl/vertical-scrollbar');
+var Scrollbar = require('./scrollbar');
+var Track = require('./track');
+
+module.exports = function VerticalScrollbar() {
+  var el = $(tpl);
+  var direction = 'vertical';
+  var track, thumb, button, corner;
+
+  var vscrollbar = function () {
+    this.property('direction', {
+      get: function () {
+        return direction;
+      },
+
+      set: function (value) {
+        if (direction === value) return;
+        direction = value;
+        this.trigger('direction', this.direction);
+      }
+    });
+
+    /*
+      Get or set the scrollbar's position, 'left' or 'outside'
+    */
+    this.property('position', {
+      get: function () {
+        return $(this.el).hasClass('left') ? 'left' : 'right';
+      },
+
+      set: function (position) {
+        if (['left', 'right'].indexOf(position) === -1) return;
+        if (this.position === position) return;
+        $(this.el).removeClass(this.position);
+        $(this.el).addClass(position);
+        this.trigger('position', this.position);
+      }
+    });
+
+    this.track = Track.call(this, $(this.el).find('>.track').get(0));
+    return this;
+  }.call(Object.create(new Scrollbar(el)));
+
+  /*
+    Shift left by pixels
+    @arguments Number distance
+    @distance, greater than zero
+  */
+  vscrollbar.shiftLeft = function (distance) {
+    if (this.position === 'right' && this.place === 'inside') {
+      this.marginRight = this.marginRight + distance;
     }
-  });
 
-  thumb.property('left', {
-    get: function () {
-      return parseInt($(el).css('left').replace(/[^-\d\.]/g, ''));
-    },
-
-    set: function (left) {
-      $(el).css('left', left);
-      thumb.trigger('left', thumb.left);
+    if (this.position === 'right' && this.place === 'outside') {
+      this.marginLeft = this.marginLeft - distance;
     }
-  });
+  }
 
-  thumb.property('availableMovingWidth', {
-    get: function () {
-      return track.width - thumb.width;
+  vscrollbar.shiftRight = function (distance) {
+    if (this.position === 'right' && this.place === 'inside') {
+      this.marginRight = this.marginRight - distance;
     }
-  });
 
-  thumb.property('availableMovingHeight', {
-    get: function () {
-      return track.height - thumb.height;
+    if (this.position === 'right' && this.place === 'outside') {
+      this.marginLeft = this.marginLeft + distance;
     }
-  });
+  }
 
-  thumb.property('percentX', {
-    get: function () {
-      return thumb.left / thumb.availableMovingWidth * 100;
-    },
-
-    set: function (percentage) {
-      $(el).css('left', percentage / 100 * thumb.availableMovingWidth + 'px');
-      thumb.trigger('percent-x', thumb.percentage);
-    }
-  });
-
-  thumb.property('percentY', {
-    get: function () {
-      return thumb.top / thumb.availableMovingHeight * 100;
-    },
-
-    set: function (percentage) {
-      $(el).css('top', percentage / 100 * thumb.availableMovingHeight + 'px');
-      thumb.trigger('percent-y', thumb.percentage);
-    }
-  });
-
-  thumb.property('percentWidth', {
-    get: function () {
-      return thumb.width / track.width;
-    },
-
-    set: function (percentage) {
-      return thumb.width = percentage / 100 * track.width;
-    }
-  });
-
-  thumb.property('percentHeight', {
-    get: function () {
-      return thumb.height / track.height;
-    },
-
-    set: function (percentage) {
-      return thumb.height = percentage / 100 * track.height;
-    }
-  });
-
-  return thumb;
+  return vscrollbar;
 }
 
 });
