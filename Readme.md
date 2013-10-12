@@ -42,13 +42,37 @@ $(function () {
 
 ## API
 
-#### scroll.top()
+### scroll
 
-#### scroll.bottom()
+#### .top()
 
-#### scroll.left()
+#### .bottom()
 
-#### scroll.right()
+#### .left()
+
+#### .right()
+
+### scroll.content
+
+### scroll.verticalScrollbar
+
+#### .width
+#### .height
+#### .direction
+#### .position
+#### .place
+#### .top
+#### .left
+
+### scroll.horizontalScrollbar
+
+#### .width
+#### .height
+#### .direction
+#### .position
+#### .place
+#### .top
+#### .left
 
 
 ## Compatibility
