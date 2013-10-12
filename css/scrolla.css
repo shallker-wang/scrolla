@@ -1,11 +1,8 @@
 .component.scrolla {
   position: relative;
-  overflow: hidden;
 }
-.component.scrolla >.content {
-  position: absolute;
-  top: 0;
-  left: 0;
+.component.scrolla >.scroll {
+  overflow: hidden;
 }
 .component.scrolla >.scrollbar {
   position: absolute;

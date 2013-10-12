@@ -23,7 +23,7 @@ $(function () {
 ## Structure
 ```jade
 .component.scrolla
-  .content
+  .scroll
     p Content Lorem Ipsum
 
   .scrollbar.horizontal.bottom.inside

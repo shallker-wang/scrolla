@@ -14,7 +14,7 @@
   "scripts": [
     "component.js",
     "lib/scrolla.js",
-    "lib/content.js",
+    "lib/scroll.js",
     "lib/scrollbar.js",
     "lib/track.js",
     "lib/thumb.js",
