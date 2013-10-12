@@ -10093,24 +10093,190 @@ module.exports = function Eventy(object) {
 }
 
 });
-require.register("scroll/component.js", function(exports, require, module){
-module.exports = require('./lib/scroll');
+require.register("scrolla/component.js", function(exports, require, module){
+module.exports = require('./lib/scrolla');
 
 });
-require.register("scroll/lib/content.js", function(exports, require, module){
+require.register("scrolla/lib/scrolla.js", function(exports, require, module){
+var $ = require('jquery'),
+    Scroll = require('./scroll'),
+    Scrollbar = require('./scrollbar'),
+    eventy = require('eventy');
+
+module.exports = function Scrolla(el) {
+  var scroll;
+
+  var scrolla = function () {
+    var scrolla = this;
+    this.el = el;
+
+    this.property = function (name, defines) {
+      Object.defineProperty(this, name, defines);
+    }
+
+    this.property('width', {
+      get: function () {
+        return el.offsetWidth;
+      }
+    });
+
+    this.property('height', {
+      get: function () {
+        return el.offsetHeight;
+      }
+    });
+
+    scroll = new Scroll($(el).find('>.scroll').get(0));
+    return this;
+  }.call(eventy({}));
+
+  scrolla.scroll = scroll;
+
+  (function checkSize() {
+    if (scroll.availableScrollWidth > 0) {
+      if (!scrolla.horizontalScrollbar) {
+        scrolla.horizontalScrollbar = createScrollbar('horizontal');
+      };
+    } else {
+      if (scroll.horizontalScrollbar) {
+        scrolla.horizontalScrollbar.destroy();
+        scrolla.horizontalScrollbar = null;
+      }
+    }
+
+    if (scroll.availableScrollHeight > 0) {
+      if (!scrolla.verticalScrollbar) {
+        scrolla.verticalScrollbar = createScrollbar('vertical');
+      };
+    } else {
+      if (scroll.verticalScrollbar) {
+        scrolla.verticalScrollbar.destroy();
+        scrolla.verticalScrollbar = null;
+      }
+    }
+
+    setTimeout(checkSize, 200);
+  })()
+
+  function createScrollbar(direction) {
+    var scrollbar = new Scrollbar(direction);
+
+    /*
+      Append element to the DOM first, so you can get offsetWidth, clientWidth
+      values not as zero
+    */
+    $(el).append(scrollbar.el);
+
+    initScrollbarSize(scrollbar);
+    listenScrolling(scrollbar);
+
+    return scrollbar;
+  }
+
+  /*
+    Initialize scrollbar's size
+  */
+  function initScrollbarSize(scrollbar) {
+    if (scrollbar.direction === 'horizontal') {
+      scrollbar.track.thumb.percentWidth = scroll.percentWidth;
+    }
+    
+    if (scrollbar.direction === 'vertical') {
+      scrollbar.track.thumb.percentHeight = scroll.percentHeight;
+    }
+  }
+
+  function listenScrolling(scrollbar) {
+    if (scrollbar.direction === 'horizontal') {
+      scrollbar.on('scrolling', function (distance) {
+        scroll.percentX = scrollbar.track.thumb.percentX;
+      });
+
+      scroll.on('scrolling-x', function (distance) {
+        scrollbar.track.thumb.percentX = scroll.percentX;
+      });
+    }
+
+    if (scrollbar.direction === 'vertical') {
+      scrollbar.on('scrolling', function (distance) {
+        scroll.percentY = scrollbar.track.thumb.percentY;
+      });
+
+      scroll.on('scrolling-y', function (distance) {
+        scrollbar.track.thumb.percentY = scroll.percentY;
+      });          
+    }
+  }
+
+  scrolla.property('percentX', {
+    get: function () {
+      return scrolla.scroll.percentX;
+    },
+
+    set: function (percentage) {
+      scrolla.scroll.percentX = percentage;
+      scrolla.horizontalScrollbar.track.thumb.percentX = percentage;
+    }
+  });
+
+
+  scrolla.property('percentY', {
+    get: function () {
+      return scrolla.scroll.percentY;
+    },
+
+    set: function (percentage) {
+      scrolla.scroll.percentY = percentage;
+      scrolla.verticalScrollbar.track.thumb.percentY = percentage;
+    }
+  });
+
+  scrolla.top = function () {
+    return this.percentY = 0
+  }
+
+  scrolla.bottom = function () {
+    return this.percentY = 100;
+  }
+
+  scrolla.left = function () {
+    return this.percentX = 0;
+  }
+
+  scrolla.right = function () {
+    return this.percentX = 100;
+  }
+
+  return scrolla;
+}
+
+});
+require.register("scrolla/lib/scroll.js", function(exports, require, module){
 var $ = require('jquery');
 var eventy = require('eventy');
 
-module.exports = function Content(el) {
+module.exports = function Scroll(el) {
   var checkSizeInterval = 500;
 
-  var content = function () {
-    var content = this;
+  var scroll = function () {
+    var scroll = this;
     this.el = el;
 
     this.property = function(name, defines) {
       Object.defineProperty(this, name, defines);
     }
+
+    this.property('contentWidth', {
+      get: function () {
+        return el.scrollWidth;
+      }
+    });
+
+    this.property('contentHeight', {
+      get: function () {
+        return el.scrollHeight;
+      }
+    });
 
     this.property('pageX', {
       get: function () {
@@ -10127,7 +10293,7 @@ module.exports = function Content(el) {
     });
 
     /*
-      Return or set width of content, this way call avoid using method
+      Return or set width of scroll, this way can avoid using method
     */
     this.property('width', {
       get: function () {
@@ -10135,12 +10301,12 @@ module.exports = function Content(el) {
       },
 
       set: function (value) {
-        return $(el).width(value);
+        return $(el).width(value + 'px');
       }
     });
 
     /*
-      Return or set height of content
+      Return or set height of scroll
     */
     this.property('height', {
       get: function () {
@@ -10148,43 +10314,7 @@ module.exports = function Content(el) {
       },
 
       set: function (value) {
-        return $(el).height(value);
-      }
-    });
-
-    this.property('availableScrollWidth', {
-      get: function () {
-        return content.contentWidth - content.width;
-      }
-    });
-
-    this.property('availableScrollHeight', {
-      get: function () {
-        return content.contentHeight - content.height;
-      }
-    });
-
-    this.property('contentWidth', {
-      get: function () {
-        return el.scrollWidth;
-      }
-    });
-
-    this.property('contentHeight', {
-      get: function () {
-        return el.scrollHeight;
-      }
-    });
-
-    this.property('percentWidth', {
-      get: function () {
-        return content.width / content.contentWidth * 100;
-      }
-    });
-
-    this.property('percentHeight', {
-      get: function () {
-        return content.height / content.contentHeight * 100;
+        return $(el).height(value + 'px');
       }
     });
 
@@ -10195,7 +10325,7 @@ module.exports = function Content(el) {
 
       set: function (value) {
         el.scrollTop = value;
-        content.trigger('scroll-top', content.scrollTop);
+        scroll.trigger('scroll-top', scroll.scrollTop);
       }
     });
 
@@ -10206,109 +10336,164 @@ module.exports = function Content(el) {
 
       set: function (value) {
         el.scrollLeft = value;
-        content.trigger('scroll-left', content.scrollLeft);
+        scroll.trigger('scroll-left', scroll.scrollLeft);
       }
     });
 
+    /*
+      Manipulate element's top by pixel
+    */
     this.property('top', {
       get: function () {
-        return parseInt($(el).css('top').replace(/[^-\d\.]/g, ''));
+        var top = $(el).css('top');
+
+        if (top.match(/px/)) return toInt(top);
+        else return 0;
       },
 
+      /*
+        Set top of element by pixel
+        @arguments Number top
+      */
       set: function (top) {
-        $(el).css('top', top);
+        $(el).css('top', top + 'px');
       }
     });
 
     this.property('bottom', {
       get: function () {
-        return parseInt($(el).css('bottom').replace(/[^-\d\.]/g, ''));
+        var bottom = $(el).css('bottom');
+
+        if (bottom.match(/px/)) return toInt(bottom);
+        else return 0;
       },
 
       set: function (bottom) {
-        $(el).css('bottom', bottom);
+        $(el).css('bottom', bottom + 'px');
       }
     });
 
     this.property('left', {
       get: function () {
-        return parseInt($(el).css('left').replace(/[^-\d\.]/g, ''));
+        var left = $(el).css('left');
+
+        if (left.match(/px/)) return toInt(left);
+        else return 0;
       },
 
       set: function (left) {
-        $(el).css('left', left);
+        $(el).css('left', left + 'px');
       }
     });
 
     this.property('right', {
       get: function () {
-        return parseInt($(el).css('right').replace(/[^-\d\.]/g, ''));
+        var right = $(el).css('right');
+
+        if (right.match(/px/)) return toInt(right);
+        else return 0;
       },
 
       set: function (right) {
-        $(el).css('right', right);
+        $(el).css('right', right + 'px');
       }
     });
 
     this.property('marginRight', {
       get: function () {
-        return parseInt($(el).css('marginRight').replace(/[^-\d\.]/g, ''));
+        var marginRight = $(el).css('marginRight');
+
+        if (marginRight.match(/px/)) return toInt(marginRight);
+        else return 0;
       },
 
       set: function (marginRight) {
-        $(el).css('marginRight', marginRight);
+        $(el).css('marginRight', marginRight + 'px');
       }
     });
 
     this.property('marginLeft', {
       get: function () {
-        return parseInt($(el).css('marginLeft').replace(/[^-\d\.]/g, ''));
+        var marginLeft = $(el).css('marginLeft');
+
+        if (marginLeft.match(/px/)) return toInt(marginLeft);
+        else return 0;
       },
 
       set: function (marginLeft) {
-        $(el).css('marginLeft', marginLeft);
+        $(el).css('marginLeft', marginLeft + 'px');
       }
     });
 
     this.property('marginTop', {
       get: function () {
-        return parseInt($(el).css('marginTop').replace(/[^-\d\.]/g, ''));
+        var marginTop = $(el).css('marginTop');
+
+        if (marginTop.match(/px/)) return toInt(marginTop);
+        else return 0;
       },
 
       set: function (marginTop) {
-        $(el).css('marginTop', marginTop);
+        $(el).css('marginTop', marginTop + 'px');
       }
     });
 
     this.property('marginBottom', {
       get: function () {
-        return parseInt($(el).css('marginBottom').replace(/[^-\d\.]/g, ''));
+        var marginBottom = $(el).css('marginBottom');
+
+        if (marginBottom.match(/px/)) return toInt(marginBottom);
+        else return 0;
       },
 
       set: function (marginBottom) {
-        $(el).css('marginBottom', marginBottom);
+        $(el).css('marginBottom', marginBottom + 'px');
+      }
+    });
+
+    this.property('availableScrollWidth', {
+      get: function () {
+        return scroll.contentWidth - scroll.width;
+      }
+    });
+
+    this.property('availableScrollHeight', {
+      get: function () {
+        return scroll.contentHeight - scroll.height;
+      }
+    });
+
+    this.property('percentWidth', {
+      get: function () {
+        return scroll.width / scroll.contentWidth * 100;
+      }
+    });
+
+    this.property('percentHeight', {
+      get: function () {
+        return scroll.height / scroll.contentHeight * 100;
       }
     });
 
     this.property('percentX', {
       get: function () {
-        return content.scrollLeft / content.availableScrollWidth * 100;
+        return scroll.scrollLeft / scroll.availableScrollWidth * 100;
       },
 
       set: function (percentage) {
-        el.scrollLeft = percentage / 100 * content.availableScrollWidth;
-        content.trigger('percent-x', content.percentX);
+        el.scrollLeft = percentage / 100 * scroll.availableScrollWidth;
+        scroll.trigger('percent-x', scroll.percentX);
       }
     });
 
     this.property('percentY', {
       get: function () {
-        return content.scrollTop / content.availableScrollHeight * 100;
+        return scroll.scrollTop / scroll.availableScrollHeight * 100;
       },
 
       set: function (percentage) {
-        el.scrollTop = percentage / 100 * content.availableScrollHeight;
-        content.trigger('percent-y', content.percentY);
+        el.scrollTop = percentage / 100 * scroll.availableScrollHeight;
+        scroll.trigger('percent-y', scroll.percentY);
       }
     });
 
@@ -10326,6 +10511,10 @@ module.exports = function Content(el) {
 
     return this;
   }.call(eventy({}));
+
+  function toInt(string) {
+    return parseInt(string.replace(/[^-\d\.]/g, ''));
+  }
 
   function onWheel(ev) {
     var wheel = ev.originalEvent;
@@ -10394,58 +10583,58 @@ module.exports = function Content(el) {
   }
 
   function scrollUp(distance) {
-    if (content.percentY <= 0) return;
-    if (content.scrollTop <= 0) return;
+    if (scroll.scrollTop <= 0) return;
+    if (scroll.percentY <= 0) return;
     this.preventDefault();
 
-    content.scrollTop = content.scrollTop - distance;
-    content.trigger('scroll-up', distance);
-    content.trigger('scrolling').trigger('scrolling-y');
+    scroll.scrollTop = scroll.scrollTop - distance;
+    scroll.trigger('scroll-up', distance);
+    scroll.trigger('scrolling').trigger('scrolling-y');
   }
 
   function scrollDown(distance) {
-    if (content.percentY >= 100) return;
-    if (content.scrollTop >= content.availableScrollHeight) return;
+    if (scroll.scrollTop >= scroll.availableScrollHeight) return;
+    if (scroll.percentY >= 100) return;
     this.preventDefault();
 
-    content.scrollTop = content.scrollTop + distance;
-    content.trigger('scroll-down', distance);
-    content.trigger('scrolling').trigger('scrolling-y');
+    scroll.scrollTop = scroll.scrollTop + distance;
+    scroll.trigger('scroll-down', distance);
+    scroll.trigger('scrolling').trigger('scrolling-y');
   }
 
   function scrollLeft(distance) {
-    if (content.percentX <= 0) return;
-    if (content.scrollLeft <= 0) return;
+    if (scroll.scrollLeft <= 0) return;
+    if (scroll.percentX <= 0) return;
     this.preventDefault();
 
-    content.scrollLeft = content.scrollLeft - distance;
-    content.trigger('scroll-left', distance);
-    content.trigger('scrolling').trigger('scrolling-x');
+    scroll.scrollLeft = scroll.scrollLeft - distance;
+    scroll.trigger('scroll-left', distance);
+    scroll.trigger('scrolling').trigger('scrolling-x');
   }
 
   function scrollRight(distance) {
-    if (content.percentX >= 100) return;
-    if (content.scrollLeft >= content.availableScrollWidth) return;
+    if (scroll.scrollLeft >= scroll.availableScrollWidth) return;
+    if (scroll.percentX >= 100) return;
     this.preventDefault();
 
-    content.scrollLeft = content.scrollLeft + distance;
-    content.trigger('scroll-right', distance);
-    content.trigger('scrolling').trigger('scrolling-x');
+    scroll.scrollLeft = scroll.scrollLeft + distance;
+    scroll.trigger('scroll-right', distance);
+    scroll.trigger('scrolling').trigger('scrolling-x');
   }
 
   /*
-    Get or set content style in DOM
+    Get or set scroll style in DOM
   */
-  content.css = function (name, value) {
+  scroll.css = function (name, value) {
     if (value) return $(el).css(name, value);
     else return $(el).css(name);
   }
 
-  return content;
+  return scroll;
 }
 
 });
-require.register("scroll/lib/scrollbar.js", function(exports, require, module){
+require.register("scrolla/lib/scrollbar.js", function(exports, require, module){
 var $ = require('jquery');
 var eventy = require('eventy');
 var Track = require('./track');
@@ -10465,7 +10654,7 @@ module.exports = function (direction) {
     }
 
     /*
-      Return or set width of scrollbar, this way call avoid using method
+      Return or set width of scrollbar, this way can avoid using method
     */
     this.property('width', {
       get: function () {
@@ -10564,6 +10753,46 @@ module.exports = function (direction) {
       }
     });
 
+    this.property('marginRight', {
+      get: function () {
+        return parseInt($(el).css('marginRight').replace(/[^-\d\.]/g, ''));
+      },
+
+      set: function (marginRight) {
+        $(el).css('marginRight', marginRight);
+      }
+    });
+
+    this.property('marginLeft', {
+      get: function () {
+        return parseInt($(el).css('marginLeft').replace(/[^-\d\.]/g, ''));
+      },
+
+      set: function (marginLeft) {
+        $(el).css('marginLeft', marginLeft);
+      }
+    });
+
+    this.property('marginTop', {
+      get: function () {
+        return parseInt($(el).css('marginTop').replace(/[^-\d\.]/g, ''));
+      },
+
+      set: function (marginTop) {
+        $(el).css('marginTop', marginTop);
+      }
+    });
+
+    this.property('marginBottom', {
+      get: function () {
+        return parseInt($(el).css('marginBottom').replace(/[^-\d\.]/g, ''));
+      },
+
+      set: function (marginBottom) {
+        $(el).css('marginBottom', marginBottom);
+      }
+    });
+
     track = Track.call(this, $(el).find('>.track').get(0));
     return this;
   }.call(eventy({}));
@@ -10575,263 +10804,56 @@ module.exports = function (direction) {
     el.parentNode.removeChild(el);
   }
 
+  /*
+    Shift left by pixels
+    @arguments Number distance
+    @distance, greater than zero
+  */
+  scrollbar.shiftLeft = function (distance) {
+    if (this.position === 'right' && this.place === 'inside') {
+      this.marginRight = this.marginRight + distance;
+    }
+
+    if (this.position === 'right' && this.place === 'outside') {
+      this.marginLeft = this.marginLeft - distance;
+    }
+  }
+
+  scrollbar.shiftRight = function (distance) {
+    if (this.position === 'right' && this.place === 'inside') {
+      this.marginRight = this.marginRight - distance;
+    }
+
+    if (this.position === 'right' && this.place === 'outside') {
+      this.marginLeft = this.marginLeft + distance;
+    }
+  }
+
+  scrollbar.shiftUp = function (distance) {
+    if (this.position === 'bottom' && this.place === 'inside') {
+      this.marginBottom = this.marginBottom + distance;
+    }
+
+    if (this.position === 'bottom' && this.place === 'outside') {
+      this.marginTop = this.marginTop - distance;
+    }
+  }
+
+  scrollbar.shiftDown = function (distance) {
+    if (this.position === 'bottom' && this.place === 'inside') {
+      this.marginBottom = this.marginBottom - distance;
+    }
+
+    if (this.position === 'bottom' && this.place === 'outside') {
+      this.marginTop = this.marginTop + distance;
+    }
+  }
+
   return scrollbar;
 }
 
 });
-require.register("scroll/lib/scroll.js", function(exports, require, module){
-var $ = require('jquery'),
-    Content = require('./content'),
-    Scrollbar = require('./scrollbar'),
-    eventy = require('eventy');
-
-module.exports = function Scroll(el) {
-  var content;
-
-  var scroll = function () {
-    var self = this;
-    this.el = el;
-
-    this.property = function (name, defines) {
-      Object.defineProperty(this, name, defines);
-    }
-
-    this.property('width', {
-      get: function () {
-        return el.offsetWidth;
-      }
-    });
-
-    this.property('height', {
-      get: function () {
-        return el.offsetHeight;
-      }
-    });
-
-    this.property('percentWidth', {
-      get: function () {
-        return self.width / content.width * 100;
-      }
-    });
-
-    this.property('percentHeight', {
-      get: function () {
-        return self.height / content.height * 100;
-      }
-    });
-
-    this.property('percentX', {
-      get: function () {
-        return content.left / self.availableScrollWidth * 100;
-      },
-
-      set: function (percentage) {
-        content.left = self.availableScrollWidth * percentage / 100;
-        self.trigger('percent-x', self.percentX);
-      }
-    });
-
-    this.property('percentY', {
-      get: function () {
-        return content.top / self.availableScrollHeight * 100;
-      },
-
-      set: function (percentage) {
-        content.top = - self.availableScrollHeight * percentage / 100;
-        self.trigger('percent-x', self.percentX);
-      }
-    });
-
-    this.property('availableScrollWidth', {
-      get: function () {
-        return content.width - self.width;
-      }
-    });
-
-    this.property('availableScrollHeight', {
-      get: function () {
-        return content.height - self.height;
-      }
-    });
-
-    content = new Content(el);
-    return this;
-  }.call(eventy({}));
-
-  scroll.content = content;
-
-  (function checkSize() {
-    if (content.availableScrollWidth > 0) {
-      if (!scroll.horizontalScrollbar) {
-        scroll.horizontalScrollbar = createScrollbar('horizontal');
-      };
-    } else {
-      if (scroll.horizontalScrollbar) {
-        scroll.horizontalScrollbar.destroy();
-        scroll.horizontalScrollbar = null;
-      }
-    }
-
-    if (content.availableScrollHeight > 0) {
-      if (!scroll.verticalScrollbar) {
-        scroll.verticalScrollbar = createScrollbar('vertical');
-      };
-    } else {
-      if (scroll.verticalScrollbar) {
-        scroll.verticalScrollbar.destroy();
-        scroll.verticalScrollbar = null;
-      }
-    }
-
-    setTimeout(checkSize, 200);
-  })()
-
-  /*
-    Initialize scrollbar's size and position
-  */
-  function initScrollbarSizeAndPosition(scrollbar) {
-    if (scrollbar.direction === 'horizontal') {
-      scrollbar.width = content.width;
-      scrollbar.left = content.pageX + 'px';
-      scrollbar.track.thumb.percentWidth = content.percentWidth;
-    }
-    
-    if (scrollbar.direction === 'vertical') {
-      scrollbar.height = content.height;
-      scrollbar.top = content.pageY + 'px';
-      scrollbar.track.thumb.percentHeight = content.percentHeight;
-    }
-  }
-
-  /*
-    Reset content size according to scrollbar's position and place
-  */
-  function resetContentSize(scrollbar) {
-    if (scrollbar.direction === 'vertical') {
-      if (scrollbar.position === 'left') {}
-
-      if (scrollbar.position === 'right') {
-        content.marginRight = content.marginRight + scrollbar.width + 'px';
-
-        if (scrollbar.place === 'outside') {
-          scrollbar.left = content.pageX + content.width + 'px';
-        }
-
-        if (scrollbar.place === 'inside') {
-          scrollbar.left = content.pageX + content.width - scrollbar.width + 'px';
-          content.width = content.width - scrollbar.width + 'px';
-        }
-      }
-
-      scrollbar.on('place', function (place) {
-        if (place === 'outside') {
-          scrollbar.left = scrollbar.left + scrollbar.width + 'px';
-          content.width = content.width + scrollbar.width + 'px';
-        }
-
-        if (place === 'inside') {
-          scrollbar.left = scrollbar.left - scrollbar.width + 'px';
-          content.width = content.width - scrollbar.width + 'px';
-        }
-      });
-    }
-
-    if (scrollbar.direction === 'horizontal') {
-      if (scrollbar.position === 'top') {}
-
-      if (scrollbar.position === 'bottom') {
-        content.marginBottom = content.marginBottom + scrollbar.height + 'px';
-
-        if (scrollbar.place === 'outside') {
-          scrollbar.top = content.pageY + content.height + 'px';
-        }
-
-        if (scrollbar.place === 'inside') {
-          scrollbar.top = content.pageY + content.height - scrollbar.height + 'px';
-          content.height = content.height - scrollbar.height + 'px';
-        }
-      }
-
-      scrollbar.on('place', function (place) {
-        if (place === 'outside') {
-          scrollbar.top = scrollbar.top + scrollbar.height + 'px';
-          content.height = content.height + scrollbar.height + 'px';
-        }
-
-        if (place === 'inside') {
-          scrollbar.top = scrollbar.top - scrollbar.height + 'px';
-          content.height = content.height - scrollbar.height + 'px';
-        }
-      });
-    }
-  }
-
-  function listenScrolling(scrollbar) {
-    if (scrollbar.direction === 'vertical') {
-      scrollbar.on('scrolling', function (distance) {
-        content.percentY = scrollbar.track.thumb.percentY;
-      });
-
-      content.on('scrolling-y', function (distance) {
-        scrollbar.track.thumb.percentY = content.percentY;
-      });          
-    }
-
-    if (scrollbar.direction === 'horizontal') {
-      scrollbar.on('scrolling', function (distance) {
-        content.percentX = scrollbar.track.thumb.percentX;
-      });
-
-      content.on('scrolling-x', function (distance) {
-        scrollbar.track.thumb.percentX = content.percentX;
-      });
-    }
-  }
-
-  function createScrollbar(direction) {
-    var scrollbar = new Scrollbar(direction);
-
-    /*
-      Append element to the DOM first, so you can get offsetWidth, clientWidth
-      values not as zero
-    */
-    $(el).after(scrollbar.el);
-
-    initScrollbarSizeAndPosition(scrollbar);
-    resetContentSize(scrollbar);
-    listenScrolling(scrollbar);
-
-    return scrollbar;
-  }
-
-  scroll.top = function () {
-    content.percentY = 0;
-    thumb.percentY = 0;
-  }
-
-  scroll.bottom = function () {
-    content.percentY = 100;
-    thumb.percentY = 100;
-  }
-
-  scroll.left = function () {
-    content.percentX = 0;
-    thumb.percentX = 0;
-  }
-
-  scroll.right = function () {
-    content.percentX = 100;
-    thumb.percentX = 100;
-  }
-
-  // console.log('scroll.availableScrollWidth', scroll.availableScrollWidth)
-  // console.log('scroll.availableScrollHeight', scroll.availableScrollHeight)
-
-  return scroll;
-}
-
-});
-require.register("scroll/lib/track.js", function(exports, require, module){
+require.register("scrolla/lib/track.js", function(exports, require, module){
 var $ = require('jquery');
 var eventy = require('eventy');
 var Thumb = require('./thumb');
@@ -10922,7 +10944,7 @@ module.exports = function Track(el) {
 }
 
 });
-require.register("scroll/lib/thumb.js", function(exports, require, module){
+require.register("scrolla/lib/thumb.js", function(exports, require, module){
 var $ = require('jquery');
 var eventy = require('eventy');
 
@@ -11079,21 +11101,21 @@ module.exports = function Thumb(el) {
 }
 
 });
-require.register("scroll/tpl/horizontal-scrollbar.js", function(exports, require, module){
+require.register("scrolla/tpl/horizontal-scrollbar.js", function(exports, require, module){
 module.exports = '<div class="scrollbar horizontal bottom inside">\n  <div class="track">\n    <div class="button left"></div>\n    <div class="thumb"></div>\n    <div class="button right"></div>\n  </div>\n</div>';
 });
-require.register("scroll/tpl/vertical-scrollbar.js", function(exports, require, module){
+require.register("scrolla/tpl/vertical-scrollbar.js", function(exports, require, module){
 module.exports = '<div class="scrollbar vertical right inside">\n  <div class="track">\n    <div class="button top"></div>\n    <div class="thumb"></div>\n    <div class="button bottom"></div>\n  </div>\n</div>';
 });
 
 
 
-require.alias("component-jquery/index.js", "scroll/deps/jquery/index.js");
+require.alias("component-jquery/index.js", "scrolla/deps/jquery/index.js");
 require.alias("component-jquery/index.js", "jquery/index.js");
 
-require.alias("shallker-wang-eventy/index.js", "scroll/deps/eventy/index.js");
-require.alias("shallker-wang-eventy/lib/eventy.js", "scroll/deps/eventy/lib/eventy.js");
-require.alias("shallker-wang-eventy/index.js", "scroll/deps/eventy/index.js");
+require.alias("shallker-wang-eventy/index.js", "scrolla/deps/eventy/index.js");
+require.alias("shallker-wang-eventy/lib/eventy.js", "scrolla/deps/eventy/lib/eventy.js");
+require.alias("shallker-wang-eventy/index.js", "scrolla/deps/eventy/index.js");
 require.alias("shallker-wang-eventy/index.js", "eventy/index.js");
 require.alias("shallker-wang-dever/component.js", "shallker-wang-eventy/deps/dever/component.js");
 require.alias("shallker-wang-dever/util/dever.js", "shallker-wang-eventy/deps/dever/util/dever.js");
@@ -11107,4 +11129,4 @@ require.alias("shallker-array-forEach-shim/index.js", "shallker-wang-dever/deps/
 require.alias("shallker-array-forEach-shim/index.js", "shallker-array-forEach-shim/index.js");
 require.alias("shallker-wang-dever/component.js", "shallker-wang-dever/index.js");
 require.alias("shallker-wang-eventy/index.js", "shallker-wang-eventy/index.js");
-require.alias("scroll/component.js", "scroll/index.js");
+require.alias("scrolla/component.js", "scrolla/index.js");

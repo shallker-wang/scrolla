@@ -3,30 +3,28 @@
     <title>Test</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="stylesheet" href="../build/build.css"/><style type="text/css">.component.scroll {
-  width: 400px;
-  height: 400px;
-}
-</style>
+    <link rel="stylesheet" href="../build/build.css"/>
   </head>
   <body>
-    <div style="width: 600px; height: 200px;" class="component scroll">
-      <div id="content" style="width: 2000px; height: 200px;" class="content">
-        <div>head</div>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis facilisis adipiscing enim. Vestibulum et nunc sed nulla sodales tincidunt. Sed posuere nisl eu mi viverra porttitor. Etiam id ante a dolor vehicula adipiscing. Nam elementum congue erat vel vehicula. Suspendisse enim justo, ornare non arcu in, sollicitudin mattis urna. Duis vitae suscipit nunc. Nam a lacinia elit.</p>
-        <p>Vestibulum eu velit turpis. Aenean varius sit amet ipsum sit amet placerat. Nam quis nulla ut tortor varius mollis. Aliquam ut aliquet nulla. Suspendisse potenti. In ornare lacus nec dapibus bibendum. Cras laoreet lectus tincidunt, facilisis nisl et, ullamcorper nulla. Quisque massa neque, eleifend ut auctor a, suscipit eu ante. Fusce non sapien purus. Cras quis condimentum velit, vel tempus quam. Donec leo nisl, pretium ac magna sed, tempus pellentesque nisl. Morbi imperdiet dui quis risus tempus tincidunt. Ut accumsan est vel placerat elementum. Proin a nisi lacinia, placerat ante sed, blandit lectus. Nulla placerat, neque in laoreet vehicula, mi nulla molestie sapien, varius aliquet magna eros ac magna.</p>
-        <div>footer</div>
+    <div id="scrolla" class="component scrolla">
+      <div id="scroll" style="width: 600px;" class="scroll">
+        <div style="width: 2000px;" class="content">
+          <div>head</div>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis facilisis adipiscing enim. Vestibulum et nunc sed nulla sodales tincidunt. Sed posuere nisl eu mi viverra porttitor. Etiam id ante a dolor vehicula adipiscing. Nam elementum congue erat vel vehicula. Suspendisse enim justo, ornare non arcu in, sollicitudin mattis urna. Duis vitae suscipit nunc. Nam a lacinia elit.</p>
+          <p>Vestibulum eu velit turpis. Aenean varius sit amet ipsum sit amet placerat. Nam quis nulla ut tortor varius mollis. Aliquam ut aliquet nulla. Suspendisse potenti. In ornare lacus nec dapibus bibendum. Cras laoreet lectus tincidunt, facilisis nisl et, ullamcorper nulla. Quisque massa neque, eleifend ut auctor a, suscipit eu ante. Fusce non sapien purus. Cras quis condimentum velit, vel tempus quam. Donec leo nisl, pretium ac magna sed, tempus pellentesque nisl. Morbi imperdiet dui quis risus tempus tincidunt. Ut accumsan est vel placerat elementum. Proin a nisi lacinia, placerat ante sed, blandit lectus. Nulla placerat, neque in laoreet vehicula, mi nulla molestie sapien, varius aliquet magna eros ac magna.</p>
+          <div>footer</div>
+        </div>
       </div>
     </div>
     <script src="../build/build.js"></script>
     <script>
       var $ = require('jquery');
-      var Scroll = require('scroll');
+      var Scrolla = require('scrolla');
       
       $(function () {
-        $('.scroll').each(function (index, el) {
-          window.scroll = new Scroll(el);
-          scroll.horizontalScrollbar.place = 'outside';
+        $('.scrolla').each(function (index, el) {
+          window.scrolla = new Scrolla(el);
+          scrolla.horizontalScrollbar.place = 'outside';
         });
       })
     </script>
