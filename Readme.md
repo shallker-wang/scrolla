@@ -23,33 +23,55 @@ $(function () {
 ## Structure
 ```jade
 .component.scroll
-  .content
-    p Lorem Ipsum
+  p Lorem Ipsum
 
-  .scrollbar.horizontal
-    .track
-      .button.left
-      .thumb
-      .button.right
+.scrollbar.horizontal.bottom.inside
+  .track
+    .button.left
+    .thumb
+    .button.right
 
-  .scrollbar.vertical
-    .track
-      .button.top
-      .thumb
-      .button.bottom
+.scrollbar.vertical.right.outside
+  .track
+    .button.top
+    .thumb
+    .button.bottom
 ```
 
 
 ## API
 
-#### scroll.top()
+### scroll
 
-#### scroll.bottom()
+#### .top()
 
-#### scroll.left()
+#### .bottom()
 
-#### scroll.right()
+#### .left()
 
+#### .right()
+
+### scroll.content
+
+### scroll.verticalScrollbar
+
+#### .width
+#### .height
+#### .direction
+#### .position
+#### .place
+#### .top
+#### .left
+
+### scroll.horizontalScrollbar
+
+#### .width
+#### .height
+#### .direction
+#### .position
+#### .place
+#### .top
+#### .left
 
 ## Compatibility
 - IE 9+
@@ -59,7 +81,9 @@ $(function () {
 
 
 ## Test
-http://shallker-wang.github.io/scroll/test/index.html   
+http://shallker-wang.github.io/scroll/test/horizontal.html   
+http://shallker-wang.github.io/scroll/test/vertical.html   
+http://shallker-wang.github.io/scroll/test/both.html   
 
 
 ## Todo
