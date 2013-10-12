@@ -1,0 +1,1 @@
+module.exports = '<div class="scrollbar vertical right inside">\n  <div class="track">\n    <div class="button top"></div>\n    <div class="thumb"></div>\n    <div class="button bottom"></div>\n  </div>\n</div>';

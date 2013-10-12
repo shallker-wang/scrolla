@@ -17,7 +17,9 @@
     "lib/scrollbar.js",
     "lib/scroll.js",
     "lib/track.js",
-    "lib/thumb.js"
+    "lib/thumb.js",
+    "tpl/horizontal-scrollbar.js",
+    "tpl/vertical-scrollbar.js"
   ],
   "styles": [
     "css/scroll.css"
