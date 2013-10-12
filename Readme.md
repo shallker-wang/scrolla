@@ -97,11 +97,11 @@ http://shallker-wang.github.io/scrolla/test/both.html
 
 
 ## Todo
-- ~~horizontal support~~
-- ~~horizontal mouse scroll~~
-- smooth scrolling
-- unify scrolling speed on browsers
-- four corner buttons
+- [x] horizontal support
+- [x] horizontal mouse scroll
+- [ ] smooth scrolling
+- [ ] unify scrolling speed on browsers
+- [ ] four corner buttons
 
 
 ## License
