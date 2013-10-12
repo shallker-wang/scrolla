@@ -63,7 +63,7 @@ http://shallker-wang.github.io/scroll/test/index.html
 
 
 ## Todo
-- horizontal support
+- ~~horizontal support~~
 - smooth scrolling
 - four corner buttons
 
