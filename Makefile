@@ -1,10 +1,8 @@
 
 build: components lib/*.js css/*.css
+	@rm build/build.js
 	@component build
-	@touch build/done
-	@rm build/done
-	@echo build/build.js
-	@echo build/build.css
+	@echo build done
 
 all: stylus build
 	@echo all done
