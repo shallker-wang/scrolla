@@ -10140,6 +10140,7 @@ require.register("scrolla/lib/scrolla.js", Function("exports, require, module",
 \n\
 module.exports = function Scrolla(el) {\n\
   var scroll;\n\
+  var verticalScrollbar, horizontalScrollbar;\n\
 \n\
   var scrolla = function () {\n\
     var scrolla = this;\n\
@@ -10161,37 +10162,57 @@ module.exports = function Scrolla(el) {\n\
       }\n\
     });\n\
 \n\
+    this.property('horizontalScrollbar', {\n\
+      get: function () {\n\
+        return horizontalScrollbar;\n\
+      }\n\
+    });\n\
+\n\
+    this.property('verticalScrollbar', {\n\
+      get: function () {\n\
+        return verticalScrollbar;\n\
+      }\n\
+    });\n\
+\n\
     scroll = new Scroll($(el).find('>.scroll').get(0));\n\
+\n\
+    if (scroll.availableScrollWidth > 0) {\n\
+      horizontalScrollbar = createScrollbar('horizontal');\n\
+    }\n\
+\n\
+    if (scroll.availableScrollHeight > 0) {\n\
+      verticalScrollbar = createScrollbar('vertical');\n\
+    }\n\
+\n\
+    scroll.on('resize', onScrollResize);\n\
     return this;\n\
   }.call(eventy({}));\n\
 \n\
   scrolla.scroll = scroll;\n\
 \n\
-  (function checkSize() {\n\
+  function onScrollResize() {\n\
     if (scroll.availableScrollWidth > 0) {\n\
-      if (!scrolla.horizontalScrollbar) {\n\
-        scrolla.horizontalScrollbar = createScrollbar('horizontal');\n\
+      if (!horizontalScrollbar) {\n\
+        horizontalScrollbar = createScrollbar('horizontal');\n\
       };\n\
     } else {\n\
-      if (scroll.horizontalScrollbar) {\n\
-        scrolla.horizontalScrollbar.destroy();\n\
-        scrolla.horizontalScrollbar = null;\n\
+      if (horizontalScrollbar) {\n\
+        horizontalScrollbar.destroy();\n\
+        horizontalScrollbar = null;\n\
       }\n\
     }\n\
 \n\
     if (scroll.availableScrollHeight > 0) {\n\
-      if (!scrolla.verticalScrollbar) {\n\
-        scrolla.verticalScrollbar = createScrollbar('vertical');\n\
-      };\n\
-    } else {\n\
-      if (scroll.verticalScrollbar) {\n\
-        scrolla.verticalScrollbar.destroy();\n\
-        scrolla.verticalScrollbar = null;\n\
+      if (!verticalScrollbar) {\n\
+        verticalScrollbar = createScrollbar('vertical');\n\
       }\n\
-    }\n\
-\n\
-    setTimeout(checkSize, 200);\n\
-  })()\n\
+    } else {\n\
+      if (verticalScrollbar) {\n\
+        verticalScrollbar.destroy();\n\
+        verticalScrollbar = null;\n\
+      }\n\
+    }    \n\
+  }\n\
 \n\
   function createScrollbar(direction) {\n\
     var scrollbar;\n\
@@ -10207,6 +10228,7 @@ module.exports = function Scrolla(el) {\n\
 \n\
     initScrollbarSize(scrollbar);\n\
     listenScrolling(scrollbar);\n\
+    listenResize(scrollbar);\n\
 \n\
     return scrollbar;\n\
   }\n\
@@ -10243,6 +10265,26 @@ module.exports = function Scrolla(el) {\n\
       scroll.on('scrolling-y', function (distance) {\n\
         scrollbar.track.thumb.percentY = scroll.percentY;\n\
       });          \n\
+    }\n\
+  }\n\
+\n\
+  function listenResize(scrollbar) {\n\
+    if (scrollbar.direction === 'horizontal') {\n\
+      scroll.on('resize', function () {\n\
+        if (scroll.availableScrollWidth > 0) {\n\
+          scrollbar.track.thumb.percentWidth = scroll.percentWidth;\n\
+          scrollbar.track.thumb.percentX = scroll.percentX;\n\
+        }\n\
+      });\n\
+    }\n\
+\n\
+    if (scrollbar.direction === 'vertical') {\n\
+      scroll.on('resize', function () {\n\
+        if (scroll.availableScrollHeight > 0) {\n\
+          scrollbar.track.thumb.percentHeight = scroll.percentHeight;\n\
+          scrollbar.track.thumb.percentY = scroll.percentY;\n\
+        }\n\
+      });\n\
     }\n\
   }\n\
 \n\
@@ -10294,7 +10336,8 @@ require.register("scrolla/lib/scroll.js", Function("exports, require, module",
 var eventy = require('eventy');\n\
 \n\
 module.exports = function Scroll(el) {\n\
-  var checkSizeInterval = 500;\n\
+  var checkSizeInterval = 100;\n\
+  var width, height, contentWidth, contentHeight;\n\
 \n\
   var scroll = function () {\n\
     var scroll = this;\n\
@@ -10535,6 +10578,11 @@ module.exports = function Scroll(el) {\n\
       }\n\
     });\n\
 \n\
+    width = this.width;\n\
+    height = this.height;\n\
+    contentWidth = this.contentWidth;\n\
+    contentHeight = this.contentHeight;\n\
+\n\
     var wheel = 'onwheel' in document.createElement('div') ? 'wheel' : false;\n\
     var mousewheel = 'onmousewheel' in document.createElement('div') ? 'mousewheel' : false;\n\
     var mousescroll = 'DOMMouseScroll';\n\
@@ -10549,6 +10597,18 @@ module.exports = function Scroll(el) {\n\
 \n\
     return this;\n\
   }.call(eventy({}));\n\
+\n\
+  (function checkSize() {\n\
+    if (width !== scroll.width) scroll.trigger('width-change', scroll.width).trigger('resize');\n\
+    if (height !== scroll.height) scroll.trigger('height-change', scroll.height).trigger('resize');\n\
+    if (contentWidth !== scroll.contentWidth) scroll.trigger('content-width-chagne', scroll.contentWidth).trigger('resize');\n\
+    if (contentHeight !== scroll.contentHeight) scroll.trigger('content-height-chagne', scroll.contentHeight).trigger('resize');\n\
+    width = scroll.width;\n\
+    height = scroll.height;\n\
+    contentWidth = scroll.contentWidth;\n\
+    contentHeight = scroll.contentHeight;\n\
+    setTimeout(checkSize, checkSizeInterval);\n\
+  })();\n\
 \n\
   function toInt(string) {\n\
     return parseInt(string.replace(/[^-\\d\\.]/g, ''));\n\
@@ -11056,7 +11116,7 @@ var Scrollbar = require('./scrollbar');\n\
 var Track = require('./track');\n\
 \n\
 module.exports = function HorizontalScrollbar() {\n\
-  var el = $(tpl);\n\
+  var el = $(tpl)[0];\n\
   var direction = 'horizontal';\n\
   var track, thumb, button, corner;\n\
 \n\
@@ -11122,7 +11182,7 @@ var Scrollbar = require('./scrollbar');\n\
 var Track = require('./track');\n\
 \n\
 module.exports = function VerticalScrollbar() {\n\
-  var el = $(tpl);\n\
+  var el = $(tpl)[0];\n\
   var direction = 'vertical';\n\
   var track, thumb, button, corner;\n\
 \n\
