@@ -36,6 +36,8 @@ html(lang="en")
     code.execute scrolla.verticalScrollbar.place = 'outside'
     code.execute scrolla.verticalScrollbar.shiftLeft(10)
     code.execute scrolla.verticalScrollbar.shiftRight(20)
+    p
+    code.execute var scroll = document.getElementById('scroll'); scroll.removeChild(scroll.firstChild);
 
     script(src="../build/build.js")
     script
