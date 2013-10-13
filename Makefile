@@ -5,6 +5,12 @@ build: components lib/*.js css/*.css
 	@rm build/done
 	@echo build done
 
+dev: components lib/*.js css/*.css
+	@component build --dev
+	@touch build/done
+	@rm build/done
+	@echo build dev done
+
 all: tpl stylus build
 	@echo all done
 
