@@ -41,47 +41,93 @@ $(function () {
 
 
 ## API
+```javascript
+var scrolla = new Scrolla(el);
+```
 
 ### scrolla
 #### .percentX
+```javascript
+scrolla.percentX = 0;
+scrolla.percentX = 50;
+scrolla.percentX = 100;
+```
+
 #### .percentY
+```javascript
+scrolla.percentY = 0;
+scrolla.percentY = 50;
+scrolla.percentY = 100;
+```
+
 #### .top()
 #### .bottom()
 #### .left()
 #### .right()
 
-### scrolla.scroll
-#### .percentX
-#### .percentY
-#### .scrollTop
-#### .scrollLeft
-#### .top
-#### .bottom
-#### .left
-#### .right
-
-### scrolla.verticalScrollbar
-#### .width
-#### .height
-#### .direction
-#### .position
-#### .place
-#### .top
-#### .left
-#### .shiftLeft(Number pixels)
-#### .shiftRight(Number pixels)
 
 ### scrolla.horizontalScrollbar
 #### .width
 #### .height
-#### .direction
-#### .position
-#### .place
-#### .top
-#### .left
-#### .shiftUp(Number pixels)
-#### .shiftDown(Number pixels)
 
+#### .direction
+```javascript
+scrolla.horizontalScrollbar.direction  // 'horizontal', read only
+```
+
+#### .position
+```javascript
+scrolla.horizontalScrollbar.position = 'top';
+scrolla.horizontalScrollbar.position = 'bottom';
+```
+
+#### .place
+```javascript
+scrolla.horizontalScrollbar.place = 'inside';
+scrolla.horizontalScrollbar.place = 'outside';
+```
+
+#### .shiftUp(Number pixels)
+```javascript
+scrolla.horizontalScrollbar.shiftUp(10);
+```
+
+#### .shiftDown(Number pixels)
+```javascript
+scrolla.horizontalScrollbar.shiftDown(10);
+```
+
+
+### scrolla.verticalScrollbar
+#### .width
+#### .height
+
+#### .direction
+```javascript
+scrolla.verticalScrollbar.direction  // 'vertical', read only
+```
+
+#### .position
+```javascript
+scrolla.verticalScrollbar.position = 'left';
+scrolla.verticalScrollbar.position = 'right';
+```
+
+#### .place
+```javascript
+scrolla.verticalScrollbar.place = 'inside';
+scrolla.verticalScrollbar.place = 'outside';
+```
+
+#### .shiftLeft(Number pixels)
+```javascript
+scrolla.verticalScrollbar.shiftLeft(10);
+```
+
+#### .shiftRight(Number pixels)
+```javascript
+scrolla.verticalScrollbar.shiftRgiht(10);
+```
 
 ## Compatibility
 - IE 9+
