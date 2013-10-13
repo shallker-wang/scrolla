@@ -24,16 +24,24 @@ html(lang="en")
         p Vestibulum eu velit turpis. Aenean varius sit amet ipsum sit amet placerat. Nam quis nulla ut tortor varius mollis. Aliquam ut aliquet nulla. Suspendisse potenti. In ornare lacus nec dapibus bibendum. Cras laoreet lectus tincidunt, facilisis nisl et, ullamcorper nulla. Quisque massa neque, eleifend ut auctor a, suscipit eu ante. Fusce non sapien purus. Cras quis condimentum velit, vel tempus quam. Donec leo nisl, pretium ac magna sed, tempus pellentesque nisl. Morbi imperdiet dui quis risus tempus tincidunt. Ut accumsan est vel placerat elementum. Proin a nisi lacinia, placerat ante sed, blandit lectus. Nulla placerat, neque in laoreet vehicula, mi nulla molestie sapien, varius aliquet magna eros ac magna.
         div footer
 
-    //- .scrollbar.vertical.right.inside
-    //-   .track
-    //-     .button.top
-    //-     .thumb
-    //-     .button.bottom
+    p
+    code.execute scrolla.top()
+    code.execute scrolla.bottom()
+    code.execute scrolla.percentY = 0
+    code.execute scrolla.percentY = 50
+    code.execute scrolla.percentY = 100
+    code.execute scrolla.verticalScrollbar.position = 'left'
+    code.execute scrolla.verticalScrollbar.position = 'right'
+    code.execute scrolla.verticalScrollbar.place = 'inside'
+    code.execute scrolla.verticalScrollbar.place = 'outside'
+    code.execute scrolla.verticalScrollbar.shiftLeft(10)
+    code.execute scrolla.verticalScrollbar.shiftRight(20)
 
     script(src="../build/build.js")
     script
       var $ = require('jquery');
       var Scrolla = require('scrolla');
+      require('code-execute')();
 
       $(function () {
         $('.scrolla').each(function (index, el) {
