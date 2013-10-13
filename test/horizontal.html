@@ -16,10 +16,12 @@
         </div>
       </div>
     </div>
+    <p></p><code class="execute">scrolla.left()</code><code class="execute">scrolla.right()</code><code class="execute">scrolla.percentX = 0</code><code class="execute">scrolla.percentX = 50</code><code class="execute">scrolla.percentX = 100</code><code class="execute">scrolla.horizontalScrollbar.position = 'top'</code><code class="execute">scrolla.horizontalScrollbar.position = 'bottom'</code><code class="execute">scrolla.horizontalScrollbar.place = 'inside'</code><code class="execute">scrolla.horizontalScrollbar.place = 'outside'</code><code class="execute">scrolla.horizontalScrollbar.shiftUp(10)</code><code class="execute">scrolla.horizontalScrollbar.shiftDown(20)</code>
     <script src="../build/build.js"></script>
     <script>
       var $ = require('jquery');
       var Scrolla = require('scrolla');
+      require('code-execute')();
       
       $(function () {
         $('.scrolla').each(function (index, el) {

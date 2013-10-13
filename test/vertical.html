@@ -25,10 +25,12 @@
         <div>footer</div>
       </div>
     </div>
+    <p></p><code class="execute">scrolla.top()</code><code class="execute">scrolla.bottom()</code><code class="execute">scrolla.percentY = 0</code><code class="execute">scrolla.percentY = 50</code><code class="execute">scrolla.percentY = 100</code><code class="execute">scrolla.verticalScrollbar.position = 'left'</code><code class="execute">scrolla.verticalScrollbar.position = 'right'</code><code class="execute">scrolla.verticalScrollbar.place = 'inside'</code><code class="execute">scrolla.verticalScrollbar.place = 'outside'</code><code class="execute">scrolla.verticalScrollbar.shiftLeft(10)</code><code class="execute">scrolla.verticalScrollbar.shiftRight(20)</code>
     <script src="../build/build.js"></script>
     <script>
       var $ = require('jquery');
       var Scrolla = require('scrolla');
+      require('code-execute')();
       
       $(function () {
         $('.scrolla').each(function (index, el) {
